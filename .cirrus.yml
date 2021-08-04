@@ -34,7 +34,7 @@ task:
     build_script:
       - mkdir -p /tmp/rom
       - cd /tmp/rom
-      - source build/envsetup.sh
+      - . build/envsetup.sh
       - lunch awaken_mojito-userdebug
       - export ALLOW_MISSING_DEPENDENCIES=true
       - export CCACHE_DIR=/tmp/ccache
