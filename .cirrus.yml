@@ -1,0 +1,50 @@
+env:
+    CIRRUS_CLONE_DEPTH: 1
+    CIRRUS_WORKING_DIR: "/tmp/project"
+    rclone_config: "ENCRYPTED[b68b54dedd2fa7711848efee6a8587d5cde12d54b447bedc684fecc8138484698ecd1f763083f33f2dd0703a31158d96]"
+    ccache_url: https://server.boedhack.workers.dev/ccache/ci2/ccache.tgz
+
+task:
+    name: Build
+    timeout_in: 120m
+    container:
+      image: cimg/android:30.0
+      cpu: 4
+      memory: 16G
+    download_ccache_script:
+      - sudo apt install aria2 ccache gzip pigz rclone -y
+      - cd /tmp
+      - time aria2c $ccache_url -x16 -s50
+      - time tar xf ccache.tgz
+      - rm -rf ccache.tgz
+    setup_environment_script:
+      - git config --global user.email "$GIT_MAIL"
+      - git config --global user.name "marsellinus"
+      - git config --global credential.helper "cache --timeout=7200"
+      - echo "git identity setup successfully!"
+      - git clone https://github.com/boedhack99/scripts --depth=1 --branch master
+      - scripts/setup/android_build_env.sh >/dev/null
+      - bash scripts/setup/install_android_sdk.sh >/dev/null
+    sync_script:
+      - mkdir -p /tmp/rom
+      - cd /tmp/rom
+      - repo init --depth=1 --no-repo-verify -u git://github.com/Project-Awaken/android_manifest -b 11 -g default,-device,-mips,-darwin,-notdefault
+      - git clone https://github.com/marsellinus/local_manifest --depth 1 -b 11.0 .repo/local_manifests
+      - repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j8
+    build_script:
+      - mkdir -p /tmp/rom
+      - cd /tmp/rom
+      - source build/envsetup.sh
+      - lunch awaken_mojito-userdebug
+      - export ALLOW_MISSING_DEPENDENCIES=true
+      - export CCACHE_DIR=/tmp/ccache
+      - export CCACHE_EXEC=$(which ccache)
+      - export USE_CCACHE=1
+      - export LC_ALL=C
+      - ccache -M 20G 
+      - ccache -o compression=true
+      - ccache -z
+      - make init && make sepolicy
+    upload_script:
+      - chmod +x ./upload.sh
+      - ./upload.sh
