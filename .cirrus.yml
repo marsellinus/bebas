@@ -44,7 +44,7 @@ task:
       - ccache -M 20G 
       - ccache -o compression=true
       - ccache -z
-      - make bootimage
+      - m bacon
     upload_script:
       - chmod +x ./upload.sh
       - ./upload.sh
