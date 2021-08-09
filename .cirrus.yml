@@ -48,3 +48,4 @@ task:
     upload_script:
       - chmod +x ./upload.sh
       - ./upload.sh
+     
