@@ -2,7 +2,7 @@ env:
     CIRRUS_CLONE_DEPTH: 1
     CIRRUS_WORKING_DIR: "/tmp/project"
     rclone_config: "ENCRYPTED[b68b54dedd2fa7711848efee6a8587d5cde12d54b447bedc684fecc8138484698ecd1f763083f33f2dd0703a31158d96]"
-    ccache_url: https://server.boedhack.workers.dev/ccache/ci2/ccache.tgz
+    ccache_url: https://server.boedhack.workers.dev/ccache/ci2/ccache.tar.gz
 
 task:
     name: Build
@@ -15,8 +15,8 @@ task:
       - sudo apt install aria2 ccache gzip pigz rclone -y
       - cd /tmp
       - time aria2c $ccache_url -x16 -s50
-      - time tar xf ccache.tgz
-      - rm -rf ccache.tgz
+      - time tar xf ccache.tar.gz
+      - rm -rf ccache.tar.gz
     setup_environment_script:
       - git config --global user.email "$GIT_MAIL"
       - git config --global user.name "marsellinus"
