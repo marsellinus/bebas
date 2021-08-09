@@ -29,7 +29,7 @@ task:
       - mkdir -p /tmp/rom
       - cd /tmp/rom
       - repo init --depth=1 --no-repo-verify -u https://github.com/Octavi-OS/platform_manifest.git -b 11 -g default,-device,-mips,-darwin,-notdefault
-      - git clone https://github.com/marsellinus/local_manifest --depth 1 -b 11.0 .repo/local_manifests
+      - git clone https://github.com/marsellinus/local_manifest --depth 1 -b 11R .repo/local_manifests
       - repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j8
     build_script:
       - mkdir -p /tmp/rom
