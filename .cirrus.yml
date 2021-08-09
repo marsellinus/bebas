@@ -28,7 +28,7 @@ task:
     sync_script:
       - mkdir -p /tmp/rom
       - cd /tmp/rom
-      - repo init --depth=1 --no-repo-verify -u https://github.com/Octavi-OS/platform_manifest.git -b 11 -g default,-device,-mips,-darwin,-notdefault
+      - repo init --depth=1 --no-repo-verify -u https://github.com/RevengeOS/android_manifest -b r11.0 -g default,-device,-mips,-darwin,-notdefault
       - git clone https://github.com/marsellinus/local_manifest --depth 1 -b 11R .repo/local_manifests
       - repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j8
     build_script:
@@ -44,7 +44,7 @@ task:
       - ccache -M 20G 
       - ccache -o compression=true
       - ccache -z
-      - brunch mojito 
+      - make bacon
     upload_script:
       - chmod +x ./upload.sh
       - ./upload.sh
